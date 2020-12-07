@@ -3,6 +3,7 @@ const routes = express.Router()
 const homeController = require('./app/controllers/home')
 
 //login
-routes.post('/user/create', homeController.index)
+routes.get('/user/login', homeController.index)
+routes.post('/user/create', homeController.create)
 
 module.exports = routes 

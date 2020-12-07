@@ -1,12 +1,26 @@
-const createUser = require('../model/user/login')
+const login = require('../model/user/login')
+const createUser = require('../model/user/create')
 
 const homeController = {
     index: async (request, response) => {
         const {user, password } = request.body
-        const message = await createUser(user, password)
-        console.log(message)
-        return response.json({message:`Created user ${user}`})
-}
+        const status = await login(user, password)
+        return response.json(status)
+    },  
+    create: async(request, response) => {
+        const { 
+            username,
+            password,
+            name,
+            email
+        } = request.body
+        const status = await createUser( 
+            username,
+            password,
+            name,
+            email )
+        return response.json(status)
+    }
 
 }
 
