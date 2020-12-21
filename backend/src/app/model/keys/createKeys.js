@@ -1,4 +1,4 @@
-const driver = require('../database/connection');
+const driver = require('../../database/connection');
 
 const createNodes = async ( keys, sentences, title ) => {
     const nodeSession = driver.session();

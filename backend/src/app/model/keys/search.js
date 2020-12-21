@@ -1,4 +1,4 @@
-const driver = require('../database/connection')
+const driver = require('../../database/connection')
 
 const search = async text => {
     const session = driver.session()

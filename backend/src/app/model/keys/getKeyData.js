@@ -1,4 +1,4 @@
-const driver = require('../database/connection')
+const driver = require('../../database/connection')
 
 const data = async title => {
     const session = driver.session()

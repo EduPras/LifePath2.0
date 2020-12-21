@@ -5,7 +5,7 @@ const listUserKeys = require('../model/user/listKeys')
 const userController = {
     // verify if user exists & compare hashed passwords
     index: async (request, response) => {
-        console.log('Checking user login...')
+        console.log('Checking user login... OF: '+ request.body.user)
         const {user, password } = request.body
         const status = await login(user, password)
         return response.json(status)

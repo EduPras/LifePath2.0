@@ -1,4 +1,4 @@
-const driver = require('../database/connection')
+const driver = require('../../database/connection')
 
 const listKeys = async user => {
     const session = driver.session()

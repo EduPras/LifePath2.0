@@ -1,4 +1,5 @@
-const driver = require('../database/connection')
+const driver = require('../../database/connection')
+const Token = require('../../middlewares/auth')
 const { compare_passwords } = require('../../utils/hash')
 
 
@@ -11,18 +12,13 @@ const login = async (user, password) => {
             RETURN {encryptedPasswd: u.password}
         ` ))
         const { encryptedPasswd }= result.records[0].get(0)
-        console.log(encryptedPasswd)
-        console.log(await compare_passwords(password, encryptedPasswd))
         if (encryptedPasswd === null ) 
             return { 
                 message: "User not found", 
                 status: 404
             }
         else if (await compare_passwords(password, encryptedPasswd)){
-            return {
-                message: "success",
-                status: 200
-            }
+            return Token.generateToken({user})
         }
         else {
             return {

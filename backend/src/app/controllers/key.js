@@ -6,7 +6,9 @@ const searchKey = require('../model/keys/search')
 const keyController = {
     create: async (request, response) => {
         console.log('Creating keys...')
-        const { title, description, keys, sentences, user } = request.body;
+        const { title, description, keys, sentences } = request.body;
+        const user = request.user
+        console.log(request.user)
 
         const status = await createKey(title, description, keys, sentences, user)
         return response.json(status)

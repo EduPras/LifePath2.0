@@ -1,4 +1,5 @@
-const driver = require('../database/connection')
+const driver = require('../../database/connection')
+const Token = require('../../middlewares/auth')
 const { hashed } = require('../../utils/hash')
 
 const create = async (
@@ -8,7 +9,7 @@ const create = async (
     email ) => {
     const session = driver.session()
     try {
-        const result = await session.writeTransaction(async tx => {
+        let result = await session.writeTransaction(async tx => {
             const checkuser = await tx.run(
                 `
                 OPTIONAL MATCH (u:user{username: "${username}"})
@@ -29,13 +30,12 @@ const create = async (
                     name:"${name}"
                 })                
                 `)
-                return {
-                    message: "Success",
-                    status: 201
-                }
+
+                return Token.generateToken( { username })
             }
         })
         return result
+        
     } catch (error) {
         console.log('[MODEL user create]: '+ error)
     }finally{
