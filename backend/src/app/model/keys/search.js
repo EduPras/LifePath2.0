@@ -2,6 +2,7 @@ const driver = require('../database/connection')
 
 const search = async text => {
     const session = driver.session()
+    //CALL db.index.fulltext.createNodeIndex("titlesAndDescriptions",["key", "label", "sentence"],["text","title", "description"])
     try {
         let result = await session.readTransaction( rx => 
             rx.run(
