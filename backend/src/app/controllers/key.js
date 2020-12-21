@@ -1,6 +1,7 @@
 const createKey = require('../model/keys/createKeys')
 const listKeys = require('../model/keys/list')
 const getKeyData = require('../model/keys/getKeyData')
+const searchKey = require('../model/keys/search')
 
 const keyController = {
     create: async (request, response) => {
@@ -19,6 +20,12 @@ const keyController = {
        const { title } = request.body
        console.log(`Returning data from ${title}...`)
        const status = await getKeyData(title)
+       return response.json(status)
+   },
+   search: async (request, response) => {
+       const { text } = request.body
+       console.log(`Searching for ${text}...`)
+       const status = await searchKey(text)
        return response.json(status)
    }
 }
