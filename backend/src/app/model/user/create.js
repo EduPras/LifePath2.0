@@ -17,7 +17,7 @@ const create = async (
             )
             if (checkuser.records[0].get(0) !== null) return{
                 message: "Username already been used",
-                status: "401"
+                status: 401
             } 
             else {
                 const hashedPassword = await hashed(password)
@@ -31,7 +31,7 @@ const create = async (
                 `)
                 return {
                     message: "Success",
-                    status:"201"
+                    status: 201
                 }
             }
         })

@@ -16,18 +16,18 @@ const login = async (user, password) => {
         if (encryptedPasswd === null ) 
             return { 
                 message: "User not found", 
-                status: "404" 
+                status: 404
             }
         else if (await compare_passwords(password, encryptedPasswd)){
             return {
                 message: "success",
-                status: "200"
+                status: 200
             }
         }
         else {
             return {
                 message: "Wrong password",
-                status: "401"
+                status: 401
             }
         }        
     }catch(error){

@@ -1,6 +1,6 @@
 const driver = require('../database/connection');
 
-const createNodes = async ( keys, sentences ) => {
+const createNodes = async ( keys, sentences, title ) => {
     const nodeSession = driver.session();
     try{
         await nodeSession.writeTransaction( tx => {
@@ -13,10 +13,10 @@ const createNodes = async ( keys, sentences ) => {
 
                 await tx.run(
                     `
-                    MATCH (k1:key{id:"${key}"})
-                    MATCH (k2:key{id:"${key}"})
-                    CREATE (k1)-[:sentence{text:"${first_sentence_text}"}]->(:key{id:"${first_node_ID}"})                    
-                    CREATE (k2)-[:sentence{text:"${second_sentence_text}"}]->(:key{id:"${second_node_ID}"})
+                    MATCH (k1:key{id:"${key}", belongs_to:"${title}"})
+                    MATCH (k2:key{id:"${key}", belongs_to:"${title}"})
+                    CREATE (k1)-[:sentence{text:"${first_sentence_text}"}]->(:key{id:"${first_node_ID}", belongs_to:"${title}"})                    
+                    CREATE (k2)-[:sentence{text:"${second_sentence_text}"}]->(:key{id:"${second_node_ID}", belongs_to:"${title}"})
                     `
                 )
             })
@@ -43,7 +43,7 @@ const createKey = async (title, description, keys, sentences, user) => {
 
             const verifyTitle = await tx.run(
                 `
-                OPTIONAL MATCH (t:query{title:"${title}"})
+                OPTIONAL MATCH (t:label{title:"${title}"})
                 return t.title
                 `
             )
@@ -52,10 +52,10 @@ const createKey = async (title, description, keys, sentences, user) => {
                 await tx.run(
                     `
                     MATCH (u:user{username:"${user}"})
-                    MERGE (new:query{ title:"${title}", description:"${description}"})
+                    MERGE (new:label{ title:"${title}", description:"${description}"})
                     MERGE (new)-[:created_by]->(u)
-                    CREATE (:key{id:"1"})<-[:sentence{text:"${sentences[1]}"}]-(new)
-                    CREATE (:key{id:"1.1"})<-[:sentence{text:"${sentences[1.1]}"}]-(new)
+                    CREATE (:key{id:"1", belongs_to:"${title}"})<-[:sentence{text:"${sentences[1]}"}]-(new)
+                    CREATE (:key{id:"1.1", belongs_to:"${title}"})<-[:sentence{text:"${sentences[1.1]}"}]-(new)
                     `
                 )
                 return 200
@@ -63,7 +63,7 @@ const createKey = async (title, description, keys, sentences, user) => {
         })
         await session.close()
         if ( checkTitle===200 ) {
-            let status = await createNodes(keys, sentences)
+            let status = await createNodes(keys, sentences, title)
             return status
         }
         else 
