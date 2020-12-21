@@ -28,7 +28,8 @@ const userController = {
     },
     // list keys created by the user
     list: async (request, response) => {
-        const user = request.params.user
+        const { user } = request.body
+        console.log(request.params)
         console.log(`Listing keys created by ${user}...`)
         const status = await listUserKeys(user)
         return response.json(status)

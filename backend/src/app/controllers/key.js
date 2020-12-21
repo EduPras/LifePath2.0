@@ -1,6 +1,6 @@
-const { request } = require('express');
 const createKey = require('../model/keys/createKeys')
 const listKeys = require('../model/keys/list')
+const getKeyData = require('../model/keys/getKeyData')
 
 const keyController = {
     create: async (request, response) => {
@@ -13,6 +13,12 @@ const keyController = {
    index: async (request, response) => {
        console.log('Listing labels...')
        const status = await listKeys()
+       return response.json(status)
+   },
+   singleKey: async(request, response) => {
+       const { title } = request.body
+       console.log(`Returning data from ${title}...`)
+       const status = await getKeyData(title)
        return response.json(status)
    }
 }

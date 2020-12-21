@@ -8,7 +8,8 @@ routes.get('/user/login', userController.index)
 routes.post('/user/create', userController.create)
 
 //queries
-routes.post('/keys/create', keyController.create)
-routes.get('/keys/:user',  userController.list)
+routes.post('/key/create', keyController.create)
+routes.get('/keys/user',  userController.list)
 routes.get('/keys', keyController.index)
+routes.get('/keys/title', keyController.singleKey)
 module.exports = routes 
