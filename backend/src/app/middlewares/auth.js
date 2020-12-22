@@ -37,6 +37,11 @@ const Token = {
         const newToken = Token.generateToken({ user })
         const newRefreshToken = Token.generateToken({ user }, '7d', SECRET_2)
         return { user, token: newToken.token, refreshToken: newRefreshToken.token}
+    },
+    getCredentials: user => {
+        const token = Token.generateToken({ user })
+        const refreshToken = Token.generateToken({ user }, '7d', SECRET_2)
+        return {token: token.token, refreshToken: refreshToken.token}
     }
 
 } 

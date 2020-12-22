@@ -1,7 +1,6 @@
 const driver = require('../../database/connection')
 const Token = require('../../middlewares/auth')
 const { hashed } = require('../../utils/hash')
-const { SECRET_2 } = require('../../middlewares/config')
 
 const create = async (
     username,
@@ -32,9 +31,7 @@ const create = async (
                 })                
                 `)
 
-                const token = Token.generateToken({ username })
-                const refreshToken = Token.generateToken({ username }, '7d', SECRET_2)
-                return {token: token.token, refreshToken: refreshToken.token}
+                return Token.getCredentials(username)
             }
         })
         return result
