@@ -1,33 +1,42 @@
 const JWT = require('jsonwebtoken')
-const { EXPIRES_IN } = require('./config')
+const { EXPIRES_IN, SECRET, SECRET_2} = require('./config')
 
 const Token = {
-    generateToken: payload => {
-        const token =JWT.sign(payload, 'banana', { expiresIn: EXPIRES_IN })
+    generateToken: (payload, expiresIn = EXPIRES_IN, secret = SECRET) => {
+        console.log('[GENERATE TOKEN]\n\tSecret: '+secret+'\n\tExpires: '+expiresIn)
+        const token =JWT.sign(payload, secret, { expiresIn })
         return {
-            status: 201,
             token
         }
     },
     verifyToken: (request, response, next) => {
         console.log('Verifying user...')
         const token = request.headers['authorization']
-        const { user } = JWT.verify(token, 'banana', (err, token) => {
-            if (err) response.status(400).json({message:"Invalid token"})
-            return token
-        })
-        if(!user) return response.status(403).json({message: "Permission denied"})
-        request.user = user
-        next()
+        try{
+            const { user } = JWT.verify(token, SECRET)
+            request.user = user
+            next()
+        }        
+        catch (err) {
+            const { user, token, refreshToken} = Token.refreshToken(request, response)    
+            request.user = user
+            console.log(request.user)
+            request.refreshToken = refreshToken
+            request.token = token
+            next()  
+        }
+        
     },
     refreshToken: ( request, response ) => {
         console.log('Refreshing token...')
-        const token = request.headers['authorization']
-        const { user } = JWT.verify(token, 'banana', (err, token) => {
-            if (err) response.status(400).json({message:"Invalid token"})
-            return token
+        const tokenRefresh = request.headers['x-refresh-token']
+        const user = JWT.verify(tokenRefresh, SECRET_2, (err, data) => {
+            if (err) response.status(400).json({message:"Invalid refresh token"})
+            return data.username
         })
-        return response.json(Token.generateToken({ user }))
+        const newToken = Token.generateToken({ user })
+        const newRefreshToken = Token.generateToken({ user }, '7d', SECRET_2)
+        return { user, token: newToken.token, refreshToken: newRefreshToken.token}
     }
 
 } 

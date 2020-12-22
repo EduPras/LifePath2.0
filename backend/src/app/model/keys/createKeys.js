@@ -2,6 +2,7 @@ const driver = require('../../database/connection');
 
 const createNodes = async ( keys, sentences, title ) => {
     const nodeSession = driver.session();
+    console.log(keys, sentences)
     try{
         await nodeSession.writeTransaction( tx => {
             Object.keys(keys).map( async key => {

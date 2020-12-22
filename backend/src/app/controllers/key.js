@@ -8,9 +8,12 @@ const keyController = {
         console.log('Creating keys...')
         const { title, description, keys, sentences } = request.body;
         const user = request.user
-        console.log(request.user)
-
+        console.log(user)
         const status = await createKey(title, description, keys, sentences, user)
+        if(request.token) {
+            status.token = request.token
+            status.refreshToken = request.refreshToken
+        }
         return response.json(status)
    },
    index: async (request, response) => {

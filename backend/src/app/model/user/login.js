@@ -1,6 +1,7 @@
 const driver = require('../../database/connection')
 const Token = require('../../middlewares/auth')
 const { compare_passwords } = require('../../utils/hash')
+const { SECRET_2 } = require('../../middlewares/config')
 
 
 const login = async (user, password) => {
@@ -18,7 +19,9 @@ const login = async (user, password) => {
                 status: 404
             }
         else if (await compare_passwords(password, encryptedPasswd)){
-            return Token.generateToken({user})
+            const token = Token.generateToken({ user })
+            const refreshToken = Token.generateToken({ user }, '7d', SECRET_2)
+            return {token: token.token, refreshToken: refreshToken.token}
         }
         else {
             return {
