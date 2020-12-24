@@ -2,7 +2,7 @@
 	"1":["2","2.1"],
 	"1.1":["3", "3"],
 	"2":["4", "4.1"],
-	"2.1":["5", "5.1"],
+	"2.1":["5", { "family": "Macacus"}]
 }
 
 {
@@ -12,4 +12,16 @@
 	"2.1":"Lorem ipsum D",
 	"3":"Lorem ipsum E",
 	"3.1":"Lorem ipsum F",
+}
+
+
+{
+	"1":{"sentence":"Lorem ipsum A", "label":"key"},
+	"1.1":{"sentence":"Lorem ipsum B", "label":"key"},
+	"2":{"sentence":"Lorem ipsum C", "label":"key", "parent": "1"},
+	"2.1":{"sentence":"Lorem ipsum D", "label":"key", "parent": "1.1"},
+	"3":{"sentence":"Lorem ipsum E", "label":"family", "parent": "2"},
+	"3.1":{"sentence":"Lorem ipsum F", "label":"family", "parent": "2"},
+	"4":{"sentence":"Lorem ipsum G","label":"family", "parent": "2.1"},
+	"4.1":{"sentence":"Lorem ipsum H", "label":"family", "parent": "2.1"}	
 }
