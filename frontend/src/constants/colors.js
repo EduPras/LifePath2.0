@@ -4,7 +4,8 @@ const COLORS = {
     secondary:'#61A0AF',
     white: 'white',
     gray58: '#949494',
-    lightGray: '#d7d7d7'
+    lightGray: '#d7d7d7',
+    black: '#000'
 }
 
 export default COLORS

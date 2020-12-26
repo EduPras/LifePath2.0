@@ -9,12 +9,9 @@ const theme = createMuiTheme( {
         secondary: {
             main: COLORS.secondary
         },
-        white: {
-            main: COLORS.white
-        }
     },
     typography: {
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'Raleway'
     },
 })
