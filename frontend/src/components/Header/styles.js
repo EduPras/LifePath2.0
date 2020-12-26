@@ -13,13 +13,18 @@ export const Header = styled.header`
     align-items: center;
 `
 export const Item = styled.a`
-    margin: 0 20px;
+    margin-right: 20px;
     font-family:'Raleway';
     padding: 5px 10px;
     background-color: ${ props => props.active ? COLORS.secondary : COLORS.white };
     color: ${ props => props.active ? COLORS.white : COLORS.secondary };
     font-size: 20px;
     text-decoration: none;
+    transition: 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    &:hover{
+        background-color: ${ props => !props.active ? COLORS.lightGray : null };
+        transition: 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    }
 `
 export const ItemContainer = styled.div`
     display:flex;

@@ -46,7 +46,7 @@ function App() {
                             setIsRegister={setIsRegister} 
                         />}
                 </Container>
-                {isRegister ? 
+                {!isRegister ? 
                     <Button onClick={() => setIsRegister(!isRegister)}>
                         Create account
                     </Button>

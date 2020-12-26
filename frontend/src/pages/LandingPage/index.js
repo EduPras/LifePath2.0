@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Logo, FormContainer, SearchContainer } from'./styles.js'
+import { Container, Logo, SearchContainer } from'./styles.js'
 import Header from '../../components/Header'
 import ArrowLogo from '../../icons/ArrowLogo/index.js'
 import Form from '../../components/InitalForm/index.js'
