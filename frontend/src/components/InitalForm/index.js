@@ -33,7 +33,6 @@ function App() {
     const [isRegister, setIsRegister] = useState(false)
 
     return (
-        <ThemeProvider syle={useStyle}theme={theme}>
             <div>
                 <Container>
                     {isRegister ?
@@ -56,7 +55,6 @@ function App() {
                     </Button>
                 }
             </div>
-        </ThemeProvider>
     );
 }
 

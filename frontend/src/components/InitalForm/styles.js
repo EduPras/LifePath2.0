@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import COLORS from '../../constants/colors'
+import { COLORS } from '../../constants/colors'
 import {motion} from 'framer-motion'
 
 export const Container = styled(motion.div)`

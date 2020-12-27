@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import COLORS from '../../constants/colors'
+import { COLORS } from '../../constants/colors'
 import css from '../../constants/cssProperties'
 import { makeStyles } from '@material-ui/core/styles'
 import theme from '../../theme/provider'

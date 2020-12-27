@@ -17,7 +17,6 @@ import clsx from 'clsx'
 
 import { ContainerSearch, SearchList, Title, TitleContainer, Label, FoundLabels, Container, useStyles } from './styles'
 import PaginationComponent from '../../components/Pagination';
-import theme from '../../theme/provider';
 
 const Search = () => {
     const classes = useStyles();
@@ -27,7 +26,6 @@ const Search = () => {
         setExpanded(!expanded);
       };
     return(
-        <ThemeProvider theme={theme}>
             <ContainerSearch>
                 <Box mt={3}>
                     <TextField 
@@ -108,7 +106,6 @@ const Search = () => {
                 </SearchList>
                 <PaginationComponent/>  
             </ContainerSearch>
-        /</ThemeProvider>
     )
 
 }

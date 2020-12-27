@@ -1,7 +1,7 @@
 import React from 'react';
 import Pagination from '@material-ui/lab/Pagination';
 import { PaginationContainer } from './styles'
-import COLORS from '../../constants/colors';
+import { COLORS } from '../../constants/colors';
 
 
 const PaginationComponent = () =>  {
