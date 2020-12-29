@@ -1,19 +1,10 @@
 import React, {useState } from 'react';
 import * as Yup from 'yup';
-import { ThemeProvider } from '@material-ui/core/styles'
-import theme from '../../theme/provider'
 import Register from './register'
 import Login from './login'
 
 import { Container, Button } from './styles'
 import './index.css'
-
-
-const useStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-}
-
 
 const validationSchemaLogin = Yup.object().shape({
     username: Yup.string().required('Username required'),
