@@ -147,7 +147,7 @@ const Keys = ({titleData}) => {
         } else {
             // if it's a labeled add theses properties
             payload.name = values.name
-            payload.label = values.label
+            payload.label = true
         }
 
         // Check if parent already have 2 connections
