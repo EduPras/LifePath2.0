@@ -8,7 +8,7 @@ const userController = {
         console.log('Checking user login... OF: '+ request.body.user)
         const {user, password } = request.body
         const status = await login(user, password)
-        return response.json(status)
+        response.status(status.status).json(status)
     },  
     // check if a user already exists, then create one
     create: async(request, response) => {
@@ -24,14 +24,15 @@ const userController = {
             password,
             name,
             email )
-        return response.json(status)
+        
+        response.status(status.status).json(status)
     },
     // list keys created by the user
     list: async (request, response) => {
         const { user } = request.body
         console.log(`Listing keys created by ${user}...`)
         const status = await listUserKeys(user)
-        return response.json(status)
+        response.status(status.status).json(status)
     }
 
 }

@@ -52,9 +52,9 @@ const createKeys = async (title, description, keys, user, label) => {
     const verifyTitle = await enableToCreate(title)
     if (verifyTitle) {
         await createNodes(title, description, keys, user, label)
-        return { code: 200 }
+        return { status: 200 }
     } else return { 
-        code: 404,
+        status: 404,
         message: 'Title is already being used'
     }
 }

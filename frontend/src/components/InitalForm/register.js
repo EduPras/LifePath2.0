@@ -4,15 +4,21 @@ import { Button, LinearProgress, Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import { TextField } from 'formik-material-ui';
 
+import { createUser } from '../../services/api'
+
 import { centerDivs } from './styles'
 
 const Register = ({ validationSchema, setIsRegister }) => {
     
-    const handleCreateUser = (values, setSubmitting) => {
-        setTimeout(() => {
-        setSubmitting(false);
-        alert(JSON.stringify(values, null, 2));
-        }, 500);
+    const handleCreateUser = async (values, setSubmitting) => {
+        setSubmitting(true)
+        const data = await createUser({
+            "username": "edupras",
+            "password": "edupras",
+            "email": "edu@gmail.com",
+            "name": "Eduardo Prasniewski"})
+        console.log(data)
+        setSubmitting(false)
     }
 
     return(
@@ -88,6 +94,7 @@ const Register = ({ validationSchema, setIsRegister }) => {
                 <Button
                     variant="contained"
                     color="primary"
+                    type="submit"
                     disabled={isSubmitting}
                     onClick={submitForm}
                 >

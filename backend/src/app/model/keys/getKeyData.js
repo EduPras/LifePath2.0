@@ -52,7 +52,7 @@ const data = async title => {
     } catch (error) {
         return{
             message: "Failed to find this arrangement of keys",
-            code: 400
+            status: 400
         }
     } finally {
         session.close()
