@@ -6,10 +6,9 @@ const searchKey = require('../model/keys/search')
 const keyController = {
     create: async (request, response) => {
         console.log('Creating keys...')
-        const { title, description, keys } = request.body;
+        const { title, description, keys, label } = request.body;
         const user = request.user
-        console.log(user)
-        const status = await createKey(title, description, keys, user)
+        const status = await createKey(title, description, keys, user, label)
         if(request.token) {
             status.token = request.token
             status.refreshToken = request.refreshToken

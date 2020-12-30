@@ -6,7 +6,7 @@ const listKeys = async user => {
         const checkUser = await session.readTransaction( rx => 
             rx.run(
                 `
-                OPTIONAL MATCH(u:user{username:"${user}"})
+                OPTIONAL MATCH(u:User{username:"${user}"})
                 return u.name
                 `
             )    
@@ -15,15 +15,17 @@ const listKeys = async user => {
             const result = await session.readTransaction( rx => 
                 rx.run(
                     `
-                    MATCH(u:user{username:"${user}"})
-                    MATCH(u)<-[created_by]-(l:label)
-                    return l.title, l.description
+                    MATCH(u:User{username:"${user}"})
+                    MATCH(u)-[created_by]->(a:Arranje)
+                    return a.title, a.description, a.label
                     `
                 )    
             )
-            const returnedResult = result.records.map( label => { return {
-                title: label.get(0), 
-                description: label.get(1)} 
+            const returnedResult = result.records.map( arranje => { return {
+                title: arranje.get(0), 
+                description: arranje.get(1),
+                label: arranje.get(2)
+                } 
             })
             return {
                 status: 200,

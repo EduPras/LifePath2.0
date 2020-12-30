@@ -119,7 +119,7 @@ const Keys = ({titleData}) => {
     const [labeled, setLabeled] = useState(false)
     const [finishButton, setFinishButton] = useState(false)
     const [labelName, setLabelName] = useState('')
-    const [parent, setParent] = useState('1')
+    const [parent, setParent] = useState(1)
     const [loading, setLoading] = useState(false)
     const [keys, setKeys] = useState([])
 
@@ -142,6 +142,7 @@ const Keys = ({titleData}) => {
         // Create a new key
         if (values.label !== label) {
             setAvailable(Object.assign(available, {[currentNextKey]:{bind:0}}))
+            payload.id = currentNextKey
             setCurrentNextKey(currentNextKey+1)
         } else {
             // if it's a labeled add theses properties
@@ -151,7 +152,7 @@ const Keys = ({titleData}) => {
 
         // Check if parent already have 2 connections
         if(available[parent].bind === 2){
-            const newParent = Object.keys(available).filter( key => key!==parent)
+            const newParent = Object.keys(available).filter( key => key!==parent && available[key].bind<2)
             setParent(Math.min(...newParent))
         }
 
@@ -324,7 +325,11 @@ const Create = () => {
     const [titleData, setTitleData] = useState({})
     return(
         <>
-            {step === 0 ? <InitialForm setStep={setStep} setTitleData={setTitleData}/> : <Keys titleData={titleData}/>}
+            {step === 0 
+                ? 
+                <InitialForm setStep={setStep} setTitleData={setTitleData}/> 
+                : 
+                <Keys titleData={titleData}/>}
         </>
     )
 }

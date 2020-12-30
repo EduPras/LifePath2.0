@@ -8,7 +8,7 @@ const login = async (user, password) => {
     try{
         const result = await session.writeTransaction( tx => 
             tx.run(`
-            OPTIONAL MATCH (u:user{username:"${user}"})
+            OPTIONAL MATCH (u:User{username:"${user}"})
             RETURN {encryptedPasswd: u.password}
         ` ))
         const { encryptedPasswd }= result.records[0].get(0)

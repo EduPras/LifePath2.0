@@ -20,7 +20,6 @@ const Token = {
         catch (err) {
             const { user, token, refreshToken} = Token.refreshToken(request, response)    
             request.user = user
-            console.log(request.user)
             request.refreshToken = refreshToken
             request.token = token
             next()  
@@ -32,7 +31,7 @@ const Token = {
         const tokenRefresh = request.headers['x-refresh-token']
         const user = JWT.verify(tokenRefresh, SECRET_2, (err, data) => {
             if (err) response.status(400).json({message:"Invalid refresh token"})
-            return data.username
+            return data.user
         })
         const newToken = Token.generateToken({ user })
         const newRefreshToken = Token.generateToken({ user }, '7d', SECRET_2)

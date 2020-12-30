@@ -12,18 +12,18 @@ const create = async (
         let result = await session.writeTransaction(async tx => {
             const checkuser = await tx.run(
                 `
-                OPTIONAL MATCH (u:user{username: "${username}"})
+                OPTIONAL MATCH (u:User{username: "${username}"})
                 RETURN u.username
                 `
             )
             if (checkuser.records[0].get(0) !== null) return{
-                message: "Username already been used",
+                message: "Username is already being used",
                 status: 401
             } 
             else {
                 const hashedPassword = await hashed(password)
                 await tx.run(`
-                CREATE (:user{
+                CREATE (:User{
                     username:"${username}",
                     password:"${hashedPassword}",
                     email:"${email}",

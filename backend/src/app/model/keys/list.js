@@ -6,15 +6,16 @@ const listKeys = async () => {
         const result = await session.readTransaction( rx => 
             rx.run(
                 `
-                MATCH (l:label)-[created_by]->(u:user)
-                return l.title, l.description, u.name
+                MATCH (l:Arranje)<-[created_by]-(u:User)
+                return l.title, l.description, l.label, u.name
                 `
             )    
         )
-        const returnedResult = result.records.map( label => { return {
-            title: label.get(0), 
-            description: label.get(1),
-            name: label.get(2)
+        const returnedResult = result.records.map( arranje => { return {
+            title: arranje.get(0), 
+            description: arranje.get(1),
+            label: arranje.get(2),
+            name: arranje.get(3)
         } 
         })
         return {

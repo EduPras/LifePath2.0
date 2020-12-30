@@ -4,35 +4,44 @@ const data = async title => {
     const session = driver.session()
     try {
         let result = await session.readTransaction( async rx => {
+                let getLabel = await rx.run(
+                    `
+                    MATCH (a:Arranje{title:'${title}'})
+                    RETURN a.label
+                    `
+                )
+                const label = getLabel.records[0].get(0)
+                console.log(label)
                 let data =  await rx.run(
                     `
-                    MATCH(l:label{title:"${title}"})-[s:sentence]->(l1:key)
-                    RETURN l.title, s.text, l1.id
+                    MATCH(k1:Key{belongs_to:"${title}"})-[s:sentence]->(k:Key)
+                    RETURN k1.id, s.text, k.id
                     `
                 )
                 let moreData = await  rx.run(
                     `
-                    MATCH(l:key{belongs_to:"${title}"})-[s:sentence]->(l1:key)
-                    RETURN l.id, s.text, l1.id
+                    MATCH(k:Key{belongs_to:"${title}"})-[s:sentence]->(l:Label)
+                    RETURN k.id, s.text, l.name, l.type
                     `
                 )    
 
                 data = data.records.map( values => {
                     return {
-                        parent: values.get(0),
+                        parent: values.get(0).low,
                         sentence: values.get(1),
-                        child: values.get(2),
+                        child: values.get(2).low,
                     }
                 } )
 
                 moreData = moreData.records.map( values => {
                     return {
-                        parent: values.get(0),
+                        parent: values.get(0).low,
                         sentence: values.get(1),
-                        child: values.get(2),
+                        label: values.get(2),
+                        type: values.get(3)
                     }
                 } )
-                return Object.assign(moreData, data)
+                return [...data, ...moreData]
             }
         )        
         return {
