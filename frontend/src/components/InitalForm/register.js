@@ -1,23 +1,37 @@
 import React  from 'react';
+import { useHistory } from 'react-router-dom'
+
 import { Formik, Form, Field } from 'formik';
-import { Button, LinearProgress, Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import { TextField } from 'formik-material-ui';
+import * as Yup from 'yup'
 
 import { createUser } from '../../services/api'
 
+import Loading from '../../components/Loading'
+
 import { centerDivs } from './styles'
 
-const Register = ({ validationSchema, setIsRegister }) => {
-    
+const validationSchemaNewUser = Yup.object().shape({
+    username: Yup.string().required('Username required'),
+    password: Yup.string().required('Password required'),
+    confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    email: Yup.string().email('Must be a valid e-mail').required('E-mail required'),
+    name: Yup.string().required('Name required')
+})
+
+const Register = () => {
+    const history = useHistory()    
     const handleCreateUser = async (values, setSubmitting) => {
         setSubmitting(true)
-        const data = await createUser({
-            "username": "edupras",
-            "password": "edupras",
-            "email": "edu@gmail.com",
-            "name": "Eduardo Prasniewski"})
-        console.log(data)
+        await createUser({
+            username: values.username,
+            password: values.password,
+            email: values.email,
+            name: values.name
+        })
+        history.push('/profile')
         setSubmitting(false)
     }
 
@@ -31,7 +45,7 @@ const Register = ({ validationSchema, setIsRegister }) => {
                 username: '',
                 password: '',
             }}
-            validationSchema={validationSchema}
+            validationSchema={validationSchemaNewUser}
             onSubmit={(values, {setSubmitting}) => handleCreateUser(values, setSubmitting)}
             >
             {({ submitForm, isSubmitting }) => (
@@ -100,7 +114,7 @@ const Register = ({ validationSchema, setIsRegister }) => {
                 >
                     Submit
                 </Button>
-                {isSubmitting && <LinearProgress />}
+                {isSubmitting && <Loading />}
             </Form>
             )}
             </Formik>

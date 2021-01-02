@@ -13,24 +13,24 @@ const keyController = {
             status.token = request.token
             status.refreshToken = request.refreshToken
         }
-        return response.json(status)
+        return response.json(status).status(status.status)
    },
    index: async (request, response) => {
        console.log('Listing labels...')
        const status = await listKeys()
-       return response.json(status)
+       return response.json(status).status(status.status)
    },
    singleKey: async(request, response) => {
        const { title } = request.body
        console.log(`Returning data from ${title}...`)
        const status = await getKeyData(title)
-       return response.json(status)
+       return response.json(status).status(status.status)
    },
    search: async (request, response) => {
        const { text } = request.body
        console.log(`Searching for ${text}...`)
        const status = await searchKey(text)
-       return response.json(status)
+       return response.json(status).status(status.status)
    }
 }
 

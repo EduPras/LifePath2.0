@@ -1,22 +1,28 @@
 import React, { useState } from 'react'
-import { Formik, Form, Field } from 'formik';
-import { ThemeProvider } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Collapse from '@material-ui/core/Collapse';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SearchIcon from '@material-ui/icons/Search';
-import IconButton from '@material-ui/core/IconButton';
 import clsx from 'clsx'
 
-import { ContainerSearch, SearchList, Title, TitleContainer, Label, FoundLabels, Container, useStyles } from './styles'
+import {
+    Box,
+    TextField,
+    Card,
+    CardActions,
+    CardContent,
+    InputAdornment,
+    Button,
+    Typography,
+    Collapse,
+    IconButton,
+} from '@material-ui/core'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SearchIcon from '@material-ui/icons/Search';
+
+import { authed } from '../../services/api';
+
+import Sidebar from '../../components/Sidebar';
 import PaginationComponent from '../../components/Pagination';
+
+import { ContainerSearch, SearchList, Title, TitleContainer, Label, FoundLabels, Container, useStyles, Wrapper } from './styles'
+;
 
 const Search = () => {
     const classes = useStyles();
@@ -26,6 +32,8 @@ const Search = () => {
         setExpanded(!expanded);
       };
     return(
+        <Wrapper>
+            {authed() && <Sidebar /> }
             <ContainerSearch>
                 <Box mt={3}>
                     <TextField 
@@ -106,6 +114,7 @@ const Search = () => {
                 </SearchList>
                 <PaginationComponent/>  
             </ContainerSearch>
+        </Wrapper>
     )
 
 }

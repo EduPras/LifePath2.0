@@ -1,18 +1,26 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import UserNav from '../../components/UserNav'
 import Card from '../../components/Card'
 import { LABELS } from '../../constants/labels'
 
 import { Container } from './styles'
+import { authed } from '../../services/api'
 
 const Profile = () =>  {
-    
+    const history = useHistory()
     return (
         <>
-            <UserNav/>
-            <Container>
-                {LABELS.map(label => <Card text={label.text} color={label.color}/>)}
-            </Container>
+            {authed() ? 
+                <>
+                    <UserNav/>
+                    <Container>
+                        {LABELS.map(label => <Card text={label.text} color={label.color}/>)}
+                    </Container>
+                </>
+            
+            : history.push('/')}
+
         </>
 )}
 export default Profile

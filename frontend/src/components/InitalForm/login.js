@@ -1,17 +1,33 @@
 import React  from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { Formik, Form, Field } from 'formik';
 import { Button, Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
+import * as Yup from 'yup';
 import { TextField } from 'formik-material-ui';
+
+import { login } from '../../services/api'
+
+import Loading from '../../components/Loading'
 
 import { centerDivs } from './styles'
 
-const Login = ({ validationSchema, setIsRegister }) => {
-    const handleLogin = (values, setSubmitting) => {
-        setTimeout(() => {
-        setSubmitting(false);
-        alert(JSON.stringify(values, null, 2));
-        }, 500);
+const validationSchemaLogin = Yup.object().shape({
+    username: Yup.string().required('Username required'),
+    password: Yup.string().required('Password required')
+})
+
+const Login = () => {
+    const history = useHistory()
+    const handleLogin = async(values, setSubmitting) => {
+        setSubmitting(true)
+        await login({
+            username: values.username,
+            password: values.password
+        })
+        history.push('/profile')
+        setSubmitting(false)
 }
 
     return (
@@ -24,7 +40,7 @@ const Login = ({ validationSchema, setIsRegister }) => {
                     username: '',
                     password: '',
                 }}
-                validationSchema={validationSchema}
+                validationSchema={validationSchemaLogin}
                 onSubmit={(values, {setSubmitting}) => handleLogin(values, setSubmitting)}
                 >
                 {({ submitForm, isSubmitting }) => (
@@ -59,9 +75,12 @@ const Login = ({ validationSchema, setIsRegister }) => {
                     >
                         Submit
                     </Button>
+                    {isSubmitting && <Loading />}
                     </Form>
                 )}
+                
             </Formik>
+            
         </>
     )
 }

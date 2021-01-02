@@ -3,12 +3,12 @@ const Token = require('../../middlewares/auth')
 const { compare_passwords } = require('../../utils/hash')
 
 
-const login = async (user, password) => {
+const login = async (username, password) => {
     const session = driver.session()
     try{
         const result = await session.writeTransaction( tx => 
             tx.run(`
-            OPTIONAL MATCH (u:User{username:"${user}"})
+            OPTIONAL MATCH (u:User{username:"${username}"})
             RETURN {encryptedPasswd: u.password}
         ` ))
         const { encryptedPasswd }= result.records[0].get(0)
@@ -18,7 +18,7 @@ const login = async (user, password) => {
                 status: 404
             }
         else if (await compare_passwords(password, encryptedPasswd)){
-            return Token.getCredentials(user)
+            return Token.getCredentials(username)
         }
         else {
             return {
@@ -27,6 +27,9 @@ const login = async (user, password) => {
             }
         }        
     }catch(error){
+        return {  
+            status: 400
+        }
         console.log('[MODEL user login]: '+error)
     }finally{
         await session.close()
