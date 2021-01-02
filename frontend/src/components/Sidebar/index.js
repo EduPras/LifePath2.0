@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  Tab, 
+  Tabs, 
+  Paper
+} from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 
 import IDataBase from '../../icons/DatabaseIcon'
@@ -14,7 +19,9 @@ import { COLORS } from '../../constants/colors';
 
 const drawerWidth = 100;
 
-export default function PermanentDrawerLeft(props, { mobile = false}) {
+
+const Sidebar = ({ mobile}) => {
+  useEffect( () => console.log(mobile), [])
   const history = useHistory()
   const location = useLocation()
   const [selectedIndex, setSelectedIndex] = useState('')
@@ -37,10 +44,10 @@ export default function PermanentDrawerLeft(props, { mobile = false}) {
         justifyContent:'center',
     },
     drawerPaperDesktop: {
-      width: !mobile ? drawerWidth : '100%',
+      width: drawerWidth ,
       border: 'none',
-      background: !mobile ? 'transparent' : COLORS.white,
-      justifyContent: !mobile ? 'flex-start' : 'flex-end',
+      background: 'transparent',
+      justifyContent: 'flex-start',
       marginLeft: '20px'
     },
     itemContainer: {
@@ -53,6 +60,13 @@ export default function PermanentDrawerLeft(props, { mobile = false}) {
       height: '100px',
       width: '100px',
       borderRadius: '50%',
+      
+    },
+    tabRoot: {
+      flexGrow: 1,
+      position:'fixed',
+      width: '100vw',
+      bottom: '0'
     },
 
   }));
@@ -67,7 +81,9 @@ export default function PermanentDrawerLeft(props, { mobile = false}) {
   useEffect( () => setSelectedIndex(location.pathname), [location.pathname])
 
   return (
-    <div className={classes.root}>
+    <>
+    { !mobile ?(
+      <div className={classes.root}>
       <Drawer
         className={classes.drawer}
         variant="permanent"
@@ -76,7 +92,7 @@ export default function PermanentDrawerLeft(props, { mobile = false}) {
         }}
         anchor="left"
       >
-        <List className={ mobile ? classes.itemContainer : null}>
+        <List>
             <ListItem 
               className={classes.item} 
               button
@@ -93,7 +109,7 @@ export default function PermanentDrawerLeft(props, { mobile = false}) {
               selected={selectedIndex === '/search'}
               key='search'
             >
-                <ListItemIcon className={classes.icon}> <IDataBase color={COLORS.orange} width={25} /> </ListItemIcon>
+                <ListItemIcon className={classes.icon}> <IDataBase width={25} /> </ListItemIcon>
             </ListItem>
             <ListItem 
               className={classes.item} 
@@ -102,7 +118,7 @@ export default function PermanentDrawerLeft(props, { mobile = false}) {
               onClick={ () => handleItemChange('/search1')}
               key='create'
             >
-                <ListItemIcon className={classes.icon}> <IKey color={COLORS.purple} width={25} /> </ListItemIcon>
+                <ListItemIcon className={classes.icon}> <IKey width={25} /> </ListItemIcon>
             </ListItem>
             <ListItem 
               className={classes.item} 
@@ -111,10 +127,45 @@ export default function PermanentDrawerLeft(props, { mobile = false}) {
               onClick={ () => handleItemChange('/create')}
               key='new'
             >
-                <ListItemIcon className={classes.icon}> <INew color={COLORS.blueGreen} width={25} /> </ListItemIcon>
+                <ListItemIcon className={classes.icon}> <INew width={25} /> </ListItemIcon>
             </ListItem>
         </List>
       </Drawer>
     </div>
+
+    ) : (
+      <Paper square className={classes.tabRoot}>
+        <Tabs
+          value={selectedIndex}
+          onChange={handleItemChange}
+          variant="fullWidth"
+          indicatorColor="primary"
+          textColor="primary"
+          aria-label="icon tabs example"
+        >
+          <Tab 
+            icon={<HomeIcon />} 
+            onClick={ () => handleItemChange('/profile')} 
+          />
+          <Tab 
+            icon={<IDataBase  width={25} />} 
+            onClick={ () => handleItemChange('/search')} 
+          />
+          <Tab 
+            icon={<IKey width={25}/>}  
+            onClick={ () => handleItemChange('/search1')} 
+          />
+          <Tab 
+            icon={<INew width={25}/>} 
+            onClick={ () => handleItemChange('/create')} 
+          />
+        </Tabs>
+    </Paper>
+    )}
+    
+    </>
   );
 }
+
+
+export default Sidebar

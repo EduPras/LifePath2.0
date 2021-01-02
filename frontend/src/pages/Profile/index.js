@@ -7,7 +7,7 @@ import { LABELS } from '../../constants/labels'
 import { Container } from './styles'
 import { authed } from '../../services/api'
 
-const Profile = () =>  {
+const Profile = ({ mobile }) =>  {
     const history = useHistory()
     return (
         <>

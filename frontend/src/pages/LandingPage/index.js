@@ -4,7 +4,7 @@ import Header from '../../components/Header'
 import ArrowLogo from '../../icons/ArrowLogo/index.js'
 import Form from '../../components/InitalForm/index.js'
 
-const LandPage = () => {
+const LandPage = ({ mobile }) => {
 
     return(
         <>

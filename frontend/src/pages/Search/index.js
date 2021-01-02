@@ -21,10 +21,11 @@ import { authed } from '../../services/api';
 import Sidebar from '../../components/Sidebar';
 import PaginationComponent from '../../components/Pagination';
 
-import { ContainerSearch, SearchList, Title, TitleContainer, Label, FoundLabels, Container, useStyles, Wrapper } from './styles'
+import { Wrapper } from '../../styles'
+import { ContainerSearch, SearchList, Title, TitleContainer, Label, FoundLabels, Container, useStyles } from './styles'
 ;
 
-const Search = () => {
+const Search = ({ mobile }) => {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
 
@@ -32,8 +33,8 @@ const Search = () => {
         setExpanded(!expanded);
       };
     return(
-        <Wrapper>
-            {authed() && <Sidebar /> }
+        <Wrapper mobile={mobile}>
+            {authed() && <Sidebar mobile={mobile} /> }
             <ContainerSearch>
                 <Box mt={3}>
                     <TextField 
