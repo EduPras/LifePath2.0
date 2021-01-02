@@ -64,6 +64,7 @@ export default function SimpleTabs({mobile}) {
     },
     container: {
        width: !mobile ? css.maxWidthContainer : '100vw',
+       padding: !mobile ? '0' : '20px',
     },
 
     appBar: {

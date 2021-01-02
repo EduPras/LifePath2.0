@@ -66,7 +66,9 @@ const Sidebar = ({ mobile}) => {
       flexGrow: 1,
       position:'fixed',
       width: '100vw',
-      bottom: '0'
+      bottom: '0',
+      zIndex:'10',
+      backgroundColor: COLORS.secondary
     },
 
   }));
