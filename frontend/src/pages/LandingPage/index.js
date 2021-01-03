@@ -13,7 +13,7 @@ const LandPage = ({ mobile }) => {
                     <Logo>
                         <h1>Lifepath</h1>
                         <ArrowLogo/>
-                        <SearchContainer>
+                        <SearchContainer to='/search'>
                             <p>Search in database</p>
                         </SearchContainer>
                     </Logo>

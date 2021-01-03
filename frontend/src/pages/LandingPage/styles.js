@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 import { COLORS } from '../../constants/colors'
 import css from '../../constants/cssProperties'
 
@@ -24,21 +25,28 @@ export const Logo = styled.div`
         font-size: 90px;
         margin-bottom: 20px;
         font-family:  'Libre Baskerville', serif;
+        @media (max-width: ${css.maxWidthContainer}) {
+            text-align:center;
+        }
     }
 `
-export const SearchContainer = styled.div`
+export const SearchContainer = styled(Link)`
     background-color: black;
-    max-width: 400px;
+    width: 400px;
     display:flex;
     justify-content: center;
     margin-top: 50px;
+    text-decoration:none;
     transition: 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    cursor: pointer;
+    @media (max-width: ${css.maxWidthContainer}) {
+        width:100%;
+    }
     p{
         color: white;
         font-family:'Raleway';
         font-size: 20px;
-        padding: 15px 20px;
-        cursor: pointer;
+        padding: 15px 20px;        
     }
     &:hover{
         background-color: ${COLORS.gray58};
