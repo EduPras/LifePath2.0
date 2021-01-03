@@ -5,7 +5,7 @@ export const Header = styled.div`
     max-width: ${css.maxWidthContainer};
     display:flex;
     justify-content: space-between;
-    padding-top: 30px;
+    padding: 30px;
     margin: auto;
 `
 export const ProfileInformation = styled.div`

@@ -15,7 +15,7 @@ const Profile = ({ mobile }) =>  {
                 <>
                     <UserNav/>
                     <Container>
-                        {LABELS.map(label => <Card text={label.text} color={label.color}/>)}
+                        {LABELS.map(label => <Card text={label.text} color={label.color} href={label.href}/>)}
                     </Container>
                 </>
             

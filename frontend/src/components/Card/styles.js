@@ -1,9 +1,11 @@
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
-export const Card = styled.div`
+export const Card = styled(Link)`
     width: 500px;
     height: 300px;
     display: flex;
+    text-decoration:none;
     align-items: center;
     flex-direction: column;
     justify-content: center;

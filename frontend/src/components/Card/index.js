@@ -7,7 +7,7 @@ import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 
-const CardComponent = ({text, color}) => {
+const CardComponent = ({text, color, href}) => {
     const useStyles = makeStyles({
         text:{
             fontWeight:'bold',
@@ -18,7 +18,7 @@ const CardComponent = ({text, color}) => {
     const classes = useStyles();
     return(
         <>      
-            <Card>
+            <Card to={href}>
                 {text === 'My keys' && <IMykeys color={color}/>}
                 {text === 'Search in database' && <IDatabase color={color}/>}
                 {text === 'Create new key' && <ICreate color={color}/>}
