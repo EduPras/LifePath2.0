@@ -52,7 +52,10 @@ const createKeys = async (title, description, keys, user, label) => {
     const verifyTitle = await enableToCreate(title)
     if (verifyTitle) {
         await createNodes(title, description, keys, user, label)
-        return { status: 200 }
+        return { 
+            status: 200, 
+            message: 'Dicotomous key created!'
+        }
     } else return { 
         status: 404,
         message: 'Title is already being used'

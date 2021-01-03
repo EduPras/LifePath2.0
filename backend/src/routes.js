@@ -13,6 +13,7 @@ routes.post('/user/refresh', Token.refreshToken)
 
 //queries
 routes.post('/keys/create', Token.verifyToken, keyController.create)
+routes.post('/keys/verifytitle', keyController.verifyTitle)
 routes.post('/keys/user',  userController.list)
 routes.get('/keys', keyController.index)
 routes.post('/keys/title', keyController.singleKey)

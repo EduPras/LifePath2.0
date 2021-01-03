@@ -5,14 +5,18 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Formik, Form, Field } from 'formik'
 import { TextField, Select} from 'formik-material-ui'
 
-import * as Yup from 'yup' 
+import * as Yup from 'yup'
+import { createKeys, verifyTitle } from '../../services/api'
 
 import Loading from '../../components/Loading'
+import Alert from '../../components/Alert'
+import Sidebar from '../../components/Sidebar'
 
 import css from '../../constants/cssProperties'
 import { COLORS } from '../../constants/colors'
 
 import { Circle } from './styles'
+import { Wrapper } from '../../styles'
 import Arrow from '../../icons/Arrow'
 
 const useStyle = makeStyles({
@@ -44,9 +48,26 @@ const schemaKey = Yup.object().shape({
 
 
 const InitialForm = ({ setStep, setTitleData }) => {
-    const handleSubmitInitalValues = values => {
-        setTitleData(values)
-        setStep(1)
+    const [loading, setLoading] = useState(false)
+    // alert
+    const [alertMessage, setAlertMessage] = useState('')
+    const [alertStatus, setAlertStatus] = useState(200)
+    const [isToasting, setIsToasting] = useState(false)
+
+    const handleAlert = ( message, status) => { 
+        setAlertMessage(message)
+        setAlertStatus(status)
+        setIsToasting(true)
+    }
+    const handleSubmitInitalValues = async values => {
+        setLoading(true)
+        const { message, status } = await verifyTitle(values.title)
+        handleAlert(message, status)
+        if(status === 200){
+            setTitleData(values)
+            setStep(1)
+        }
+        setLoading(false)
     }   
     const classes = useStyle()
     return(
@@ -106,12 +127,18 @@ const InitialForm = ({ setStep, setTitleData }) => {
                     </Form>
                 }
             </Formik>
+            {loading && <Loading />}
+            {isToasting && <Alert message={alertMessage} status={alertStatus} setIsToasting={setIsToasting}/>}
         </Box>  
     )
 }
 
 const Keys = ({titleData}) => {
     const history = useHistory()
+    // alert
+    const [alertMessage, setAlertMessage] = useState('')
+    const [alertStatus, setAlertStatus] = useState(200)
+    const [isToasting, setIsToasting] = useState(false)
 
     const [label] = useState(titleData.label)
     const [available, setAvailable] = useState({1:{bind:0}})
@@ -162,14 +189,19 @@ const Keys = ({titleData}) => {
     }
 
     // sending data to backend
-    const handleSubmitFinish = () => {
+    const handleAlert = ( message, status) => {
+        setAlertMessage(message)
+        setAlertStatus(status)
+        setIsToasting(true)
+    }
+
+    const handleSubmitFinish = async () => {
         setLoading(true)
-        setTimeout( () => {
-            alert(JSON.stringify(keys, null, 2))
-            console.log(keys)
-            setLoading(false)
-            history.push('/profile')
-        }, 5000 )        
+        const body = Object.assign(titleData, {keys})
+        const { message, status } = await createKeys(body)
+        handleAlert(message, status)
+        history.push('/profile')
+        setLoading(false)     
     }
 
     useEffect( () => {
@@ -233,7 +265,6 @@ const Keys = ({titleData}) => {
                                         })}
                                     </Field>
                                 </FormControl>
-                                {loading && <Loading/>}
                                 <Box              
                                     display="flex" 
                                     alignItems='center'
@@ -314,23 +345,25 @@ const Keys = ({titleData}) => {
                     )}
                 </Formik>
             </Box>
-
+            {loading && <Loading/>}
+            {isToasting && <Alert message={alertMessage} status={alertStatus} setIsToasting={setIsToasting}/>}               
         </Box>
     )
 }
 
 
-const Create = () => {
+const Create = ({mobile}) => {
     const [step, setStep] = useState(0)
     const [titleData, setTitleData] = useState({})
     return(
-        <>
+        <Wrapper mobile={mobile}>
+            <Sidebar mobile={mobile}/>
             {step === 0 
                 ? 
                 <InitialForm setStep={setStep} setTitleData={setTitleData}/> 
                 : 
                 <Keys titleData={titleData}/>}
-        </>
+        </Wrapper>
     )
 }
 

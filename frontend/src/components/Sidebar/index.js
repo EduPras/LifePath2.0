@@ -12,6 +12,8 @@ import {
 } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 
+import { authed, getUser } from '../../services/api'
+
 import IDataBase from '../../icons/DatabaseIcon'
 import IKey from '../../icons/KeyIcon'
 import INew from '../../icons/New'
@@ -21,10 +23,10 @@ const drawerWidth = 100;
 
 
 const Sidebar = ({ mobile}) => {
-  useEffect( () => console.log(mobile), [])
   const history = useHistory()
   const location = useLocation()
   const [selectedIndex, setSelectedIndex] = useState('')
+  const [home, setHome] = useState('/')
   const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -74,13 +76,18 @@ const Sidebar = ({ mobile}) => {
   }));
   const classes = useStyles();
 
-  const handleItemChange = ( path ) => {
-
+  const handleItemChange = ( path, user='' ) => {
     setSelectedIndex(path)
-    history.push(path)
+    console.log(path+'/'+ user)
+    if(path === '/search' && user !== ''){
+      setSelectedIndex(path+'/'+user)
+      history.push(path, user)
+    }
+    else history.push(path)
   }
 
   useEffect( () => setSelectedIndex(location.pathname), [location.pathname])
+  useEffect( () => authed() && setHome('/profile'), [])
 
   return (
     <>
@@ -98,8 +105,8 @@ const Sidebar = ({ mobile}) => {
             <ListItem 
               className={classes.item} 
               button
-              onClick={ () => handleItemChange('/profile')}
-              selected={selectedIndex === '/profile'}
+              onClick={ () => handleItemChange(home)}
+              selected={selectedIndex === home}
               key='home'
             >
                 <ListItemIcon className={classes.icon}> <HomeIcon fontSize="large" /> </ListItemIcon>
@@ -113,24 +120,28 @@ const Sidebar = ({ mobile}) => {
             >
                 <ListItemIcon className={classes.icon}> <IDataBase width={25} /> </ListItemIcon>
             </ListItem>
-            <ListItem 
-              className={classes.item} 
-              button 
-              selected={selectedIndex === '/search1'}
-              onClick={ () => handleItemChange('/search1')}
-              key='create'
-            >
-                <ListItemIcon className={classes.icon}> <IKey width={25} /> </ListItemIcon>
-            </ListItem>
-            <ListItem 
-              className={classes.item} 
-              button 
-              selected={selectedIndex === '/create'}
-              onClick={ () => handleItemChange('/create')}
-              key='new'
-            >
-                <ListItemIcon className={classes.icon}> <INew width={25} /> </ListItemIcon>
-            </ListItem>
+            {authed() ? (
+              <>
+                <ListItem 
+                  className={classes.item} 
+                  button 
+                  selected={selectedIndex === `/search/${getUser()}`}
+                  onClick={ () => handleItemChange(`/search`, getUser())}
+                  key='keys'
+                >
+                    <ListItemIcon className={classes.icon}> <IKey width={25} /> </ListItemIcon>
+                </ListItem>
+                <ListItem 
+                  className={classes.item} 
+                  button 
+                  selected={selectedIndex === '/create'}
+                  onClick={ () => handleItemChange('/create')}
+                  key='new'
+                >
+                    <ListItemIcon className={classes.icon}> <INew width={25} /> </ListItemIcon>
+                </ListItem>
+              </>
+            ) : null}
         </List>
       </Drawer>
     </div>
@@ -153,14 +164,18 @@ const Sidebar = ({ mobile}) => {
             icon={<IDataBase  width={25} />} 
             onClick={ () => handleItemChange('/search')} 
           />
-          <Tab 
-            icon={<IKey width={25}/>}  
-            onClick={ () => handleItemChange('/search1')} 
-          />
-          <Tab 
-            icon={<INew width={25}/>} 
-            onClick={ () => handleItemChange('/create')} 
-          />
+          {authed() && 
+              <Tab 
+                icon={<IKey width={25}/>}  
+                onClick={ () => handleItemChange('/search', getUser())} 
+              />
+          }
+          {authed() &&
+              <Tab 
+                icon={<INew width={25}/>} 
+                onClick={ () => handleItemChange('/create')} 
+              />
+          }
         </Tabs>
     </Paper>
     )}

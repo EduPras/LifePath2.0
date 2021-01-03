@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import clsx from 'clsx'
 
 import {
@@ -16,7 +17,7 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SearchIcon from '@material-ui/icons/Search';
 
-import { authed, searchText, getAllKeys, keysCreatedByUser } from '../../services/api';
+import { searchText, getAllKeys, keysCreatedByUser } from '../../services/api';
 
 import Sidebar from '../../components/Sidebar';
 import PaginationComponent from '../../components/Pagination';
@@ -28,40 +29,47 @@ import { ContainerSearch, SearchList, Title, TitleContainer, Label, FoundLabels,
 ;
 
 const Search = ({ mobile }) => {
-    const classes = useStyles();
+    const classes = useStyles()
+    const location = useLocation()
     const [keys, setKeys] = useState([])
     const [loading, setLoading] = useState(false)
     const [text, setText] = useState('')
+    // alert
     const [alertMessage, setAlertMessage] = useState('')
     const [alertStatus, setAlertStatus] = useState(200)
     const [isToasting, setIsToasting] = useState(false)
+
     const [activeIdExpanded, setActiveIdExpanded] = useState(-1)
 
     const handleExpandClick = i => {
         setActiveIdExpanded(activeIdExpanded === i ? -1 : i)
       };
 
+    const handleAlert = ( message, status) => {
+        if(status === 200) setKeys(message)
+        else{
+            setAlertMessage(message)
+            setAlertStatus(status)
+            setIsToasting(true)
+        }
+    }
+
+    
+    const userKeys = async user => {
+        const { message, status } = await keysCreatedByUser(user)
+        handleAlert(message, status)
+    }
+    
     const handleSearch = async () => {
         setLoading(true)
         // list keys of an especific user
         if(text.startsWith('@')){
             let user = text.slice(1)
-            const { message, status } = await keysCreatedByUser(user)
-            if(status === 200) setKeys(message)
-            else{
-                setAlertMessage(message)
-                setAlertStatus(status)
-                setIsToasting(true)
-            }
+            await userKeys(user)
         // keys found by searching
         } else {
             const { message, status } = await searchText(text)
-            if(status === 200) setKeys(message)
-            else{
-                setAlertMessage(message)
-                setAlertStatus(status)
-                setIsToasting(true)
-            }
+            handleAlert(message, status)
         }
         setLoading(false)
     }
@@ -69,16 +77,21 @@ const Search = ({ mobile }) => {
     useEffect( () => {
         const refreshKeys = async() =>{
             setLoading(true)
-            const { message } = await getAllKeys()
-            setKeys(message)
+            if(location.state !== '' && location.state !== undefined){
+                await userKeys(location.state)
+            }else{
+                const { message } = await getAllKeys()
+                setKeys(message)
+            }
+
             setLoading(false)
         }
         refreshKeys()
-    }, [])
+    }, [location.state])
 
     return(
         <Wrapper mobile={mobile}>
-            {authed() && <Sidebar mobile={mobile} /> }
+            <Sidebar mobile={mobile}/>
             <ContainerSearch>
                 <Box mt={3}>
                     <TextField 

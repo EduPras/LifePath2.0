@@ -2,6 +2,7 @@ const createKey = require('../model/keys/createKeys')
 const listKeys = require('../model/keys/list')
 const getKeyData = require('../model/keys/getKeyData')
 const searchKey = require('../model/keys/search')
+const verifyTitle = require('../model/keys/verifyTitle')
 
 const keyController = {
     create: async (request, response) => {
@@ -30,6 +31,12 @@ const keyController = {
        const { text } = request.body
        console.log(`Searching for ${text}...`)
        const status = await searchKey(text)
+       return response.json(status).status(status.status)
+   },
+   verifyTitle: async(request, response) => {
+       const { title } = request.body
+       console.log(`Verifying title ${title}...`)
+       const status = await verifyTitle(title)
        return response.json(status).status(status.status)
    }
 }
