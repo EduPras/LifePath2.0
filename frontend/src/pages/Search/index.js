@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import clsx from 'clsx'
 
 import {
@@ -16,10 +16,12 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SearchIcon from '@material-ui/icons/Search';
 
-import { authed } from '../../services/api';
+import { authed, searchText, getAllKeys, keysCreatedByUser } from '../../services/api';
 
 import Sidebar from '../../components/Sidebar';
 import PaginationComponent from '../../components/Pagination';
+import Loading from '../../components/Loading';
+import Alert from '../../components/Alert'
 
 import { Wrapper } from '../../styles'
 import { ContainerSearch, SearchList, Title, TitleContainer, Label, FoundLabels, Container, useStyles } from './styles'
@@ -27,11 +29,53 @@ import { ContainerSearch, SearchList, Title, TitleContainer, Label, FoundLabels,
 
 const Search = ({ mobile }) => {
     const classes = useStyles();
-    const [expanded, setExpanded] = useState(false);
+    const [keys, setKeys] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [text, setText] = useState('')
+    const [alertMessage, setAlertMessage] = useState('')
+    const [alertStatus, setAlertStatus] = useState(200)
+    const [isToasting, setIsToasting] = useState(false)
+    const [activeIdExpanded, setActiveIdExpanded] = useState(-1)
 
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
+    const handleExpandClick = i => {
+        setActiveIdExpanded(activeIdExpanded === i ? -1 : i)
       };
+
+    const handleSearch = async () => {
+        setLoading(true)
+        // list keys of an especific user
+        if(text.startsWith('@')){
+            let user = text.slice(1)
+            const { message, status } = await keysCreatedByUser(user)
+            if(status === 200) setKeys(message)
+            else{
+                setAlertMessage(message)
+                setAlertStatus(status)
+                setIsToasting(true)
+            }
+        // keys found by searching
+        } else {
+            const { message, status } = await searchText(text)
+            if(status === 200) setKeys(message)
+            else{
+                setAlertMessage(message)
+                setAlertStatus(status)
+                setIsToasting(true)
+            }
+        }
+        setLoading(false)
+    }
+
+    useEffect( () => {
+        const refreshKeys = async() =>{
+            setLoading(true)
+            const { message } = await getAllKeys()
+            setKeys(message)
+            setLoading(false)
+        }
+        refreshKeys()
+    }, [])
+
     return(
         <Wrapper mobile={mobile}>
             {authed() && <Sidebar mobile={mobile} /> }
@@ -43,10 +87,13 @@ const Search = ({ mobile }) => {
                         variant="outlined" 
                         placeholder="Families, orders ..."
                         color="secondary"
+                        onChange={({target: { value }}) => setText(value)}
                         InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <SearchIcon color="secondary" />
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                  <IconButton onClick={() => handleSearch()}>
+                                    <SearchIcon color="secondary" />
+                                  </IconButton>                                
                               </InputAdornment>
                             ),
                           }}
@@ -54,67 +101,58 @@ const Search = ({ mobile }) => {
                     />
                 </Box>  
                 <SearchList>
-                    <Card className={classes.card} >                    
-                        <CardContent>
-                            <Container>
-                                <TitleContainer>
-                                    <Title>
-                                        <Typography variant="h5" className={classes.title} component="h1" color="textSecondary" gutterBottom>
-                                            Title test
-                                        </Typography>
-                                        <Typography className={classes.username} color="secondary" >
-                                            Eduardo Prasniewski
-                                        </Typography>  
-                                    </Title>
-                                    <Box className={classes.box} ml={2}>
-                                        <Typography variant="h6" className={classes.label} component="h2" color="secondary" gutterBottom>
-                                            Order
-                                        </Typography>
-                                    </Box>
-                                </TitleContainer>   
-                                <FoundLabels>
-                                    <Label>Family</Label>
-                                    <Label>Macus</Label>
-                                    <Label>Mamimus</Label>
-                                    <Label>Teles</Label>
-                                    <Label>Xenes</Label>
-                                    <Label>Family</Label>
-                                    <Label>Macus</Label>
-                                    <Label>Mamimus</Label>
-                                    <Label>Teles</Label>
-                                    <Label>Xenes</Label>
-                                    <Label>Family</Label>
-                                    <Label>Macus</Label>
-                                    <Label>Mamimus</Label>
-                                    <Label>Teles</Label>
-                                    <Label>Xenes</Label>
-                                </FoundLabels>                             
-                            </Container>                   
-                        </CardContent>
-                        <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    {keys.map( (key, index) => (
+                        <Card className={classes.card} >                    
                             <CardContent>
-                                <Typography mt={2} variant="subtitle1" color="textSecondary" gutterBottom>
-                                    Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos. Lorem Ipsum sobreviveu não só a cinco séculos, como também ao salto para a editoração eletrônica, permanecendo essencialmente inalterado.
-                                </Typography> 
+                                <Container>
+                                    <TitleContainer>
+                                        <Title>
+                                            <Typography variant="h5" className={classes.title} component="h1" color="textSecondary" gutterBottom>
+                                                {key.title}
+                                            </Typography>
+                                            <Typography className={classes.username} color="secondary" >
+                                                {key.name}
+                                            </Typography>  
+                                        </Title>
+                                        <Box className={classes.box} ml={2}>
+                                            <Typography variant="h6" className={classes.label} component="h2" color="secondary" gutterBottom>
+                                                {key.label}
+                                            </Typography>
+                                        </Box>
+                                    </TitleContainer>   
+                                    <FoundLabels>
+                                        {key.labelsName.map( labelName => <Label>{labelName}</Label> )}
+                                    </FoundLabels>                             
+                                </Container>                   
                             </CardContent>
-                        </Collapse>
-                        <CardActions>
-                            <Button variant="contained" className={classes.button} color="secondary" >Navigate</Button>
-                            <IconButton
-                                className={clsx(classes.expand, {
-                                [classes.expandOpen]: expanded,
-                                })}
-                                onClick={handleExpandClick}
-                                aria-expanded={expanded}
-                                aria-label="show more"
-                            >
-                                <ExpandMoreIcon />
-                            </IconButton>
-                        </CardActions>
-                    </Card>                    
+                            <Collapse in={activeIdExpanded === index} timeout="auto" unmountOnExit>
+                                <CardContent>
+                                    <Typography mt={2} variant="subtitle1" color="textSecondary" gutterBottom>
+                                        {key.description}
+                                    </Typography> 
+                                </CardContent>
+                            </Collapse>
+                            <CardActions>
+                                <Button variant="contained" className={classes.button} color="secondary" >Navigate</Button>
+                                <IconButton
+                                    className={clsx(classes.expand, {
+                                    [classes.expandOpen]: activeIdExpanded === index,
+                                    })}
+                                    onClick={() => handleExpandClick(index)}
+                                    aria-expanded={activeIdExpanded === index}
+                                    aria-label="show more"
+                                >
+                                    <ExpandMoreIcon />
+                                </IconButton>
+                            </CardActions>
+                        </Card>                    
+                    ) )}
+                    
                 </SearchList>
                 <PaginationComponent/>  
             </ContainerSearch>
+            {loading && <Loading />}
+            {isToasting && <Alert message={alertMessage} status={alertStatus} setIsToasting={setIsToasting}/>}
         </Wrapper>
     )
 

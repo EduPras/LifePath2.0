@@ -13,9 +13,9 @@ routes.post('/user/refresh', Token.refreshToken)
 
 //queries
 routes.post('/keys/create', Token.verifyToken, keyController.create)
-routes.get('/keys/user',  userController.list)
+routes.post('/keys/user',  userController.list)
 routes.get('/keys', keyController.index)
-routes.get('/keys/title', keyController.singleKey)
-routes.get('/keys/search', keyController.search)
+routes.post('/keys/title', keyController.singleKey)
+routes.post('/keys/search', keyController.search)
 
 module.exports = routes 

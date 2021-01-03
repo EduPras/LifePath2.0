@@ -20,19 +20,19 @@ const search = async text => {
                 UNWIND result2 as results
                 MATCH (a:Arranje{title:results})
                 MATCH (a)<-[:created_by]-(u:User)
-                RETURN distinct a.title, a.description, a.label, u.name
+                MATCH (a)-[*]->(l:Label)
+                RETURN distinct a.title, a.description, a.label, u.name, collect(l.name)
                 `
             )
         )
-
-        result = result.records.map( item => {
-            return{
-                title: item.get(0),
-                description: item.get(1),
-                label: item.get(2),
-                created_by: item.get(3)
-            }
-        } )
+        
+        result = result.records.map( arranje => { return {
+            title: arranje.get(0), 
+            description: arranje.get(1),
+            label: arranje.get(2),
+            name: arranje.get(3),
+            labelsName: arranje.get(4)
+        }})
         return{
             status: 200,
             message: result

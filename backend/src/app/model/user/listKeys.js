@@ -17,15 +17,18 @@ const listKeys = async user => {
                     `
                     MATCH(u:User{username:"${user}"})
                     MATCH(u)-[created_by]->(a:Arranje)
-                    return a.title, a.description, a.label
+                    MATCH (a)-[*]->(l:Label)
+                    return a.title, a.description, a.label, u.name, collect(l.name)
                     `
                 )    
             )
             const returnedResult = result.records.map( arranje => { return {
                 title: arranje.get(0), 
                 description: arranje.get(1),
-                label: arranje.get(2)
-                } 
+                label: arranje.get(2),
+                name: arranje.get(3),
+                labelsName: arranje.get(4)
+            } 
             })
             return {
                 status: 200,
