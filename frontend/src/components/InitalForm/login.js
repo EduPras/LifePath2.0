@@ -1,4 +1,4 @@
-import React  from 'react';
+import React, { useState }  from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Formik, Form, Field } from 'formik';
@@ -10,6 +10,7 @@ import { TextField } from 'formik-material-ui';
 import { login } from '../../services/api'
 
 import Loading from '../../components/Loading'
+import Alert from '../../components/Alert'
 
 import { centerDivs } from './styles'
 
@@ -20,13 +21,27 @@ const validationSchemaLogin = Yup.object().shape({
 
 const Login = () => {
     const history = useHistory()
+    // alert
+    const [alertMessage, setAlertMessage] = useState('')
+    const [alertStatus, setAlertStatus] = useState(200)
+    const [isToasting, setIsToasting] = useState(false)  
+
+    const handleAlert = ( message, status) => {
+        if (status !== 200){
+            setAlertMessage(message)
+            setAlertStatus(status)
+            setIsToasting(true)
+        }
+    }
+
     const handleLogin = async(values, setSubmitting) => {
         setSubmitting(true)
-        await login({
+        const { message, status } = await login({
             username: values.username,
             password: values.password
         })
-        history.push('/profile')
+        handleAlert(message, status)
+        if( status === 200 ) history.push('/profile')
         setSubmitting(false)
 }
 
@@ -80,7 +95,13 @@ const Login = () => {
                 )}
                 
             </Formik>
-            
+            {isToasting && 
+                <Alert 
+                    message={alertMessage} 
+                    status={alertStatus} 
+                    setIsToasting={setIsToasting}
+                />
+            } 
         </>
     )
 }

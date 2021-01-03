@@ -28,7 +28,8 @@ const login = async (username, password) => {
         }        
     }catch(error){
         return {  
-            status: 400
+            status: 400,
+            message: 'Something went wrong'
         }
         console.log('[MODEL user login]: '+error)
     }finally{

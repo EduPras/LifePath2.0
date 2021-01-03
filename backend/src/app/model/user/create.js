@@ -31,7 +31,10 @@ const create = async (
                 })                
                 `)
 
-                return Token.getCredentials(username)
+                return Object.assign(Token.getCredentials(username),{
+                    message: 'User created!',
+                    status: 200
+                })
             }
         })
         return result

@@ -346,7 +346,13 @@ const Keys = ({titleData}) => {
                 </Formik>
             </Box>
             {loading && <Loading/>}
-            {isToasting && <Alert message={alertMessage} status={alertStatus} setIsToasting={setIsToasting}/>}               
+            {isToasting && 
+                <Alert 
+                    message={alertMessage} 
+                    status={alertStatus} 
+                    setIsToasting={setIsToasting}
+                />
+            }               
         </Box>
     )
 }

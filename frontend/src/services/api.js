@@ -32,6 +32,7 @@ export const createUser = async body => {
         const { data }= await api.post('/user/create', body)
         setTokens(data.token, data.refreshToken)
         setUser(data.user)
+        return data
     } catch (error) {
         console.log(error)
     }    
@@ -42,6 +43,7 @@ export const login = async body => {
         const { data }= await api.post('/user/login', body)
         setTokens(data.token, data.refreshToken)
         setUser(data.user)
+        return data
     } catch (error) {
         console.log(error)
     }

@@ -5,10 +5,16 @@ import css from '../../constants/cssProperties'
 export const Container = styled.div`
     display: flex;
     justify-content: space-between;
-    max-width:${css.maxWidthContainer};
+    padding: 50px;
+    width:${css.maxWidthContainer};
     margin: auto;
     align-items: center;
     height:100vh;
+    @media (max-width: ${css.maxWidthContainer}) {
+        flex-direction: column;
+        width:auto;
+        justify-content: space-around;
+    }
 
 `
 

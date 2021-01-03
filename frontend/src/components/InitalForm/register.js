@@ -1,4 +1,4 @@
-import React  from 'react';
+import React, { useState}  from 'react';
 import { useHistory } from 'react-router-dom'
 
 import { Formik, Form, Field } from 'formik';
@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import { createUser } from '../../services/api'
 
 import Loading from '../../components/Loading'
+import Alert from '../../components/Alert'
 
 import { centerDivs } from './styles'
 
@@ -22,16 +23,30 @@ const validationSchemaNewUser = Yup.object().shape({
 })
 
 const Register = () => {
-    const history = useHistory()    
+    const history = useHistory()
+    // alert
+    const [alertMessage, setAlertMessage] = useState('')
+    const [alertStatus, setAlertStatus] = useState(200)
+    const [isToasting, setIsToasting] = useState(false)  
+
+    const handleAlert = ( message, status) => {
+        if (status !== 200){
+            setAlertMessage(message)
+            setAlertStatus(status)
+            setIsToasting(true)
+        }
+    }
+
     const handleCreateUser = async (values, setSubmitting) => {
         setSubmitting(true)
-        await createUser({
+        const { message, status } = await createUser({
             username: values.username,
             password: values.password,
             email: values.email,
             name: values.name
         })
-        history.push('/profile')
+        handleAlert(message, status)
+        if ( status === 200 ) history.push('/profile')
         setSubmitting(false)
     }
 
@@ -118,6 +133,13 @@ const Register = () => {
             </Form>
             )}
             </Formik>
+            {isToasting && 
+                <Alert 
+                    message={alertMessage} 
+                    status={alertStatus} 
+                    setIsToasting={setIsToasting}
+                />
+            } 
         </>
     )
 }

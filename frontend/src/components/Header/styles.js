@@ -4,10 +4,8 @@ import css from '../../constants/cssProperties'
 
 export const Header = styled.header`
     margin:0;
-    padding: 30px;
     height: 100px;
     position: fixed;
-    width: 100vw;
     display:flex;
     justify-content: center;
     align-items: center;
