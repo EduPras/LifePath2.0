@@ -7,11 +7,17 @@ const data = async title => {
                 let getLabel = await rx.run(
                     `
                     MATCH (a:Arranje{title:'${title}'})
-                    RETURN a.label
+                    MATCH (a)<-[created_by]-(u:User)
+                    RETURN a.label, a.description, a.title, u.name
                     `
                 )
-                const label = getLabel.records[0].get(0)
-                console.log(label)
+                const header = {
+                    label: getLabel.records[0].get(0),
+                    description: getLabel.records[0].get(1),
+                    title: getLabel.records[0].get(2),
+                    user: getLabel.records[0].get(3),
+                }
+
                 let data =  await rx.run(
                     `
                     MATCH(k1:Key{belongs_to:"${title}"})-[s:sentence]->(k:Key)
@@ -41,7 +47,10 @@ const data = async title => {
                         type: values.get(3)
                     }
                 } )
-                return [...data, ...moreData]
+                return {
+                  header,
+                  data: [...data, ...moreData]
+                }
             }
         )        
         return {

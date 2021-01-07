@@ -18,7 +18,9 @@ const login = async (username, password) => {
                 status: 404
             }
         else if (await compare_passwords(password, encryptedPasswd)){
-            return Token.getCredentials(username)
+            return Object.assign(Token.getCredentials(username), {
+                status:200
+            })
         }
         else {
             return {

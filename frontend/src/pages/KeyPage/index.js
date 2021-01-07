@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -9,11 +10,13 @@ import {
     Box,
 } from '@material-ui/core'
 
-import { authed } from '../../services/api'
+import { getSingleKeyData } from '../../services/api'
 
 import css from '../../constants/cssProperties'
 import { COLORS } from '../../constants/colors'
 import Sidebar from '../../components/Sidebar'
+import Alert from '../../components/Alert'
+import Explore from '../../components/Explore'
 
 import Path from '../../components/Path'
 
@@ -53,7 +56,23 @@ function a11yProps(index) {
 }
 
 export default function SimpleTabs({mobile}) {
-  const [value, setValue] = useState(0);
+  const params = useParams()
+  const [value, setValue] = useState(0)
+  const [data, setData] = useState([])
+  const [header, setHeader] = useState({})
+  // alert
+  const [alertMessage, setAlertMessage] = useState('')
+  const [alertStatus, setAlertStatus] = useState(200)
+  const [isToasting, setIsToasting] = useState(false)
+
+  const handleAlert = ( message, status) => {
+    if(status !== 200){
+      setAlertMessage(message)
+      setAlertStatus(status)
+      setIsToasting(true)
+    }
+  }
+
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -84,37 +103,56 @@ export default function SimpleTabs({mobile}) {
     setValue(newValue);
   };
 
+  useEffect( () => {
+    const getData = async () =>{
+      const { message: { header, data}, status } = await getSingleKeyData(params.title)
+      handleAlert(data, status)
+      if(status === 200){
+        setHeader(header)
+        setData(data)
+      }
+    }
+    getData()
+  }, [params.title])
+
   return (
     <Wrapper mobile={mobile}>
-        { authed() && <Sidebar mobile={mobile}/>}
+        <Sidebar mobile={mobile}/>
         <div className={classes.container}>
             <AppBar position="static" className={classes.appBar}>
                 <Tabs value={value} onChange={handleChange} variant="fullWidth" aria-label="simple tabs example">
                     <Tab label="The key" {...a11yProps(0)} />
                     <Tab className={classes.centerTab} label="Paths" {...a11yProps(1)} />
-                    <Tab label="Navigate" {...a11yProps(2)} />
+                    <Tab label="Explore" {...a11yProps(2)} />
                     </Tabs>
             </AppBar>   
             <Box className={classes.root}>
                 <TabPanel  value={value} index={0}>
                     <Typography variant='h3' gutterBottom>
-                        Some title
+                        {header.title}
                     </Typography>
                     <Typography variant='h5' paragraph>
-                        Lorem ipsum dales impus
+                        {header.description}
                     </Typography>
                     <Typography variant='h6' className={classes.username} paragraph>
-                        Eduardo Prasniewski
+                        {header.user}
                     </Typography>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    <Path />
+                    <Path data={data} label={header.label}/>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    Item Three
+                    <Explore data={data}/>
                 </TabPanel>
             </Box>
         </div>
+        {isToasting && 
+                <Alert 
+                    message={alertMessage} 
+                    status={alertStatus} 
+                    setIsToasting={setIsToasting}
+                />
+            }
     </Wrapper>
   );
 }

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { COLORS } from '../../constants/colors'
 
 export const LabelContainer = styled.div`
-    min-width: 100px;
+    min-width: 200px;
     height: 100%;
     min-height: 100%;
 `
@@ -11,35 +11,43 @@ export const PathContainer = styled.div`
     align-items:center;
     justify-content: space-around;
     flex-direction:column;
+    background-color: ${COLORS.cream};
+    border: 1px solid ${COLORS.cream};
     flex: 1;
+    position: relative;
 `
 export const Container = styled.div`
     display: flex;
     height: 800px;
 `
-export const Grid = styled.ul`
+export const SelectPath = styled.div`
+    width: 50px;
+    height: 50px;
+    background-color: ${COLORS.primary};
+    font-family: 'Raleway';
+    font-weight: bold;
+    font-size: 25px;
     display: flex;
+    border-radius: 50%;
+    flex-direction:column;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    padding:0;
-    gap: 10px;
-    width: 100%;
-    height: 80%;
-    overflow-y: scroll;
+    cursor: pointer;
+    opacity:${({active}) => active ? '1' : '0.4'};
+    transition: 0.25s ease;
+    &:hover{
+        opacity: 1;
+        transition: 0.25s ease;
+    }
 `
-export const Item = styled.li`
-    list-style:none;
-    display:flex;
-    justify-content: center;
-    align-items:center;
+export const SelectPathContainer = styled.ul`
+    position: absolute;
+    padding: 0;
+    top: 10px;
+    left: 10px;
+    gap: 15px;
+    display: flex;
     flex-direction:column;
-`
-export const Text = styled.p`
-    padding: 10px 15px;
-    border-radius: 3px;
-    background-color: ${COLORS.lightGray};
-    font-family: 'Raleway';
-    font-size: 16px;
-    margin-bottom: 7px;
+    align-items: center;
+    justify-content: center;
 `

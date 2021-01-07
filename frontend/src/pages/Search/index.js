@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import clsx from 'clsx'
 
 import {
@@ -29,6 +29,7 @@ import { ContainerSearch, SearchList, Title, TitleContainer, Label, FoundLabels,
 ;
 
 const Search = ({ mobile }) => {
+    const history = useHistory()
     const classes = useStyles()
     const location = useLocation()
     const [keys, setKeys] = useState([])
@@ -146,7 +147,7 @@ const Search = ({ mobile }) => {
                                 </CardContent>
                             </Collapse>
                             <CardActions>
-                                <Button variant="contained" className={classes.button} color="secondary" >Navigate</Button>
+                                <Button variant="contained" onClick={() => history.push(`/key/${key.title}`)} className={classes.button} color="secondary" >Navigate</Button>
                                 <IconButton
                                     className={clsx(classes.expand, {
                                     [classes.expandOpen]: activeIdExpanded === index,
@@ -165,7 +166,13 @@ const Search = ({ mobile }) => {
                 <PaginationComponent/>  
             </ContainerSearch>
             {loading && <Loading />}
-            {isToasting && <Alert message={alertMessage} status={alertStatus} setIsToasting={setIsToasting}/>}
+            {isToasting && 
+                <Alert 
+                    message={alertMessage} 
+                    status={alertStatus} 
+                    setIsToasting={setIsToasting}
+                />
+            }
         </Wrapper>
     )
 
