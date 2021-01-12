@@ -1,7 +1,8 @@
 import { Typography } from '@material-ui/core'
 import React from 'react'
-import { getUser } from '../../services/api'
-import { Header, ProfileInformation, Avatar } from './styles'
+import { getUser, logout } from '../../services/api'
+import { Button } from '@material-ui/core'
+import { Header, ProfileInformation } from './styles'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 const User = () => (
         <Header>
@@ -11,6 +12,7 @@ const User = () => (
                     Welcome, {getUser()}
                 </Typography>
             </ProfileInformation>
+            <Button onClick={() => logout()}>Log out</Button>
         </Header>
     )
 

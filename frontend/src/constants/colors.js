@@ -10,5 +10,6 @@ export const COLORS = {
     orange: '#EA9E58',
     blueGreen: '#61A0AF',
     iconColor: '#0000008a',
-    cream: '#96886917'
+    cream: '#96886917',
+    rustyRed: '#e64444'
 }

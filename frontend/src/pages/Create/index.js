@@ -92,25 +92,31 @@ const InitialForm = ({ setStep, setTitleData }) => {
                         className={classes.form}
                         onSubmit={handleSubmit}
                     >
-                        <Typography variant='h4' color='primary'>
+                        <Typography variant='h4' color='secondary'>
                             Create a new key
                         </Typography>
                         <Field
                             component={TextField}
                             name='title'
                             label='Title'
+                            color='secondary'
+                            variant='outlined'
                             
                         />
                         <Field
                             component={TextField}
                             name='label'
                             label='Label'
+                            color='secondary'
+                            variant='outlined'
                             
                         />
                         <Field
                             component={TextField}
                             name='description'
                             label='Description'
+                            color='secondary'
+                            variant='outlined'
                             multiline
                             rows={4}
                             rowsMax={10}
@@ -118,7 +124,7 @@ const InitialForm = ({ setStep, setTitleData }) => {
                         />
                         <Button 
                             variant="contained"
-                            color="primary"
+                            color="secondary"
                             type='submit'
                             
                         >
@@ -326,7 +332,7 @@ const Keys = ({titleData}) => {
                                         variant='contained' 
                                         type='submit'
                                         disabled={finishButton ? true : false}                       
-                                        color='primary'
+                                        color='secondary'
                                         >
                                             Submit
                                     </Button> 
@@ -335,7 +341,7 @@ const Keys = ({titleData}) => {
                                     <Button
                                     onClick={() => handleSubmitFinish()}
                                     variant='contained'                            
-                                    color='primary'>
+                                    color='secondary'>
                                         FINISH
                                     </Button>
 

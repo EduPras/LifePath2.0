@@ -11,6 +11,7 @@ export const Grid = styled.ul`
     width: 100%;
     height: 80%;
     overflow-y: scroll;
+    padding: 20px;
 `
 export const Item = styled.li`
     list-style:none;

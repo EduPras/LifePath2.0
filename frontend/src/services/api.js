@@ -49,6 +49,13 @@ export const login = async body => {
     }
 }
 
+export const logout = () => {
+    localStorage.removeItem(TOKEN)
+    localStorage.removeItem(REFRESH_TOKEN)
+    localStorage.removeItem(USER)
+    window.location = '/'
+}
+
 export const authed = () => {
     let token = localStorage.getItem(TOKEN) 
     return !!token

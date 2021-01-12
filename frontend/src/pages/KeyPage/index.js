@@ -21,6 +21,7 @@ import Explore from '../../components/Explore'
 import Path from '../../components/Path'
 
 import { Wrapper } from '../../styles'
+import GeneratePDF from '../../components/GeneratePDF';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -128,15 +129,19 @@ export default function SimpleTabs({mobile}) {
             </AppBar>   
             <Box className={classes.root}>
                 <TabPanel  value={value} index={0}>
-                    <Typography variant='h3' gutterBottom>
+                    <Typography variant='h4' gutterBottom>
                         {header.title}
                     </Typography>
-                    <Typography variant='h5' paragraph>
+                    <Typography variant='h5' className={classes.username} gutterBottom>
+                        {header.label}
+                    </Typography>
+                    <Typography variant='h6' paragraph>
                         {header.description}
                     </Typography>
-                    <Typography variant='h6' className={classes.username} paragraph>
+                    <Typography variant='p' className={classes.username} paragraph>
                         {header.user}
                     </Typography>
+                    <GeneratePDF header={header} data={data}/>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                     <Path data={data} label={header.label}/>

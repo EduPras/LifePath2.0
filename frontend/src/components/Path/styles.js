@@ -1,3 +1,4 @@
+import { makeStyles } from '@material-ui/core';
 import styled from 'styled-components';
 import { COLORS } from '../../constants/colors'
 
@@ -14,6 +15,7 @@ export const PathContainer = styled.div`
     background-color: ${COLORS.cream};
     border: 1px solid ${COLORS.cream};
     flex: 1;
+    padding: 20px;
     position: relative;
 `
 export const Container = styled.div`
@@ -51,3 +53,10 @@ export const SelectPathContainer = styled.ul`
     align-items: center;
     justify-content: center;
 `
+
+export const useStyle = makeStyles({
+    listContainer: {
+        overflowY: 'scroll',
+        height: 'inherit'
+    }
+})

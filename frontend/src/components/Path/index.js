@@ -5,12 +5,16 @@ import { Typography, ListItemText, ListItem, List } from '@material-ui/core';
 
 
 import { LabelContainer, PathContainer, Container, SelectPath, SelectPathContainer } from './styles'
-import ShowPath from '../ShowPath';
+import ShowPath from '../ShowPath'
+import { useStyle } from './styles'
 
 
 const Path = ({data, label}) => {
-
+    const classes = useStyle()
     const [labels, ]= useState(data.filter( dots => dots.label))
+    const [displayLabels, ] = useState(data.reduce((acc, x) =>
+        acc.concat(acc.find(y => y.label === x.label) ? [] : [x])
+  , []))
     const [selectedLabel, setSelectedLabel] = useState('')
     const [paths, setPaths] = useState([])
     const [shownPath, setShownPath] = useState([])
@@ -60,8 +64,8 @@ const Path = ({data, label}) => {
                 <Typography variant='h6' gutterBottom>
                     Results found
                 </Typography>
-                <List>
-                    {labels.map( label => (
+                <List className={classes.listContainer}>
+                    {displayLabels.map( label => (
                         <ListItem button onClick={ () => setSelectedLabel(label.label)} key={label.label}>
                             <ListItemText primary={label.label} />        
                         </ListItem>
