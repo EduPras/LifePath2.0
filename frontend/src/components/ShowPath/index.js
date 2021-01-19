@@ -33,10 +33,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ShowPath = ({ shownPath, label = '', clickable = false, handleClick=null  }) => {
     const classes = useStyles();
+    const handleText = index => {
+        if (handleClick!==null) handleClick(index)
+    }
     return(
         <Grid className={classes.list}>            
             {shownPath ? shownPath.map( (segment, index) => 
-                    <Item clickable={clickable} onClick={() => handleClick(index)}>
+                    <Item clickable={clickable} onClick={() => handleText(index)}>
                         <Text>{segment.sentence}</Text>
                         <Arrow width='20px' />
                     </Item>      
